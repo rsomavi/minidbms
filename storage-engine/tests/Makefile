@@ -4,7 +4,7 @@ SRC    = ..
 
 # Todos los fuentes del storage engine
 BM_SRCS = $(SRC)/buffer_manager.c $(SRC)/buffer_frame.c \
-          $(SRC)/page_table.c $(SRC)/eviction_policy.c
+          $(SRC)/page_table.c $(SRC)/eviction_policy.c $(SRC)/trace.c
 
 BASE_SRCS = $(SRC)/disk.c $(SRC)/page.c $(SRC)/heap.c $(SRC)/schema.c
 
@@ -19,7 +19,8 @@ TESTS = test_disk \
         test_buffer_frame \
         test_page_table \
         test_eviction_policy \
-        test_buffer_manager
+        test_buffer_manager \
+        test_btree
 
 all: $(TESTS)
 
@@ -55,6 +56,9 @@ test_eviction_policy: test_eviction_policy.c $(SRC)/eviction_policy.c \
 test_buffer_manager: test_buffer_manager.c $(ALL_SRCS)
 	$(CC) $(CFLAGS) -o $@ $^
 
+test_btree: test_btree.c $(SRC)/btree.c $(SRC)/disk.c
+	$(CC) $(CFLAGS) -o $@ $^
+
 run: all
 	@echo "\n=== test_disk ===" && ./test_disk
 	@echo "\n=== test_page ===" && ./test_page
@@ -66,6 +70,7 @@ run: all
 	@echo "\n=== test_page_table ===" && ./test_page_table
 	@echo "\n=== test_eviction_policy ===" && ./test_eviction_policy
 	@echo "\n=== test_buffer_manager ===" && ./test_buffer_manager
+	@echo "\n=== test_btree ===" && ./test_btree
 
 clean:
 	rm -f $(TESTS)
